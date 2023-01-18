@@ -1,0 +1,60 @@
+header{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+header h1{
+    text-align: center;
+}
+
+header nav{
+    text-align: end;
+    
+}
+
+h2{
+    font-size: 18px;
+    font-weight: normal;
+}
+
+form input{
+    text-align: center;
+    padding: 15px;
+}
+
+.errorlist li{
+    color:rgb(97, 3, 3);
+    list-style-type: none;
+    font-size: 14px;
+}
+
+button{
+    border-radius: 8px;
+    padding: 8px 24px;
+}
+
+button:hover{
+    background-color: rgb(212, 212, 212);
+}
+
+a{
+    text-decoration: none;
+}
+
+#login{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; 
+    text-align: center;
+}
+
+#signup {
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+
+}
+
+
+
+
