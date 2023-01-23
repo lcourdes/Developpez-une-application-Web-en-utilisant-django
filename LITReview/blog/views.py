@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from . import forms, models
 from itertools import chain
 
@@ -19,8 +20,8 @@ def home(request):
 
 @login_required
 def posts(request):
-    reviews = models.Review.objects.all()
-    tickets = models.Ticket.objects.all()
+    reviews = models.Review.objects.filter(user=request.user)
+    tickets = models.Ticket.objects.filter(user=request.user)
     tickets_and_reviews = sorted(
         chain(tickets, reviews), 
         key=lambda instance: instance.time_created, 
@@ -51,11 +52,14 @@ def ticket_edit(request, ticket_id):
         if edit_form.is_valid():
             edit_form.save()
             return redirect('posts')
-    context = {
-        'edit_form': edit_form,
-        'ticket': ticket,
-    }
-    return render(request, 'blog/ticket_edit.html', context=context)
+    if request.user == ticket.user:
+        context = {
+            'edit_form': edit_form,
+            'ticket': ticket,
+        }
+        return render(request, 'blog/ticket_edit.html', context=context)
+    else:
+        raise PermissionDenied
 
 @login_required
 def ticket_delete(request, ticket_id):
@@ -66,11 +70,14 @@ def ticket_delete(request, ticket_id):
         if delete_form.is_valid():
             ticket.delete()
             return redirect('posts')
-    context = {
-        'ticket': ticket,
-        'delete_form': delete_form,
-    }
-    return render(request, 'blog/ticket_delete.html', context=context)
+    if request.user == ticket.user:
+        context = {
+            'ticket': ticket,
+            'delete_form': delete_form,
+        }
+        return render(request, 'blog/ticket_delete.html', context=context)
+    else:
+        raise PermissionDenied
 
 @login_required
 def review_and_ticket_create(request):
@@ -125,12 +132,15 @@ def review_edit(request, review_id):
         if edit_form.is_valid():
             edit_form.save()
             return redirect('posts')
-    context = {
-        'edit_form': edit_form,
-        'review': review,
-        'ticket': review.ticket,
-    }
-    return render(request, 'blog/review_edit.html', context=context)
+    if request.user == review.user:
+        context = {
+            'edit_form': edit_form,
+            'review': review,
+            'ticket': review.ticket,
+        }
+        return render(request, 'blog/review_edit.html', context=context)
+    else:
+        raise PermissionDenied
 
 @login_required
 def review_delete(request, review_id):
@@ -144,9 +154,12 @@ def review_delete(request, review_id):
             ticket.is_reviewed = False
             ticket.save()
             return redirect('posts')
-    context = {
-        'review': review,
-        'delete_form': delete_form,
-        'ticket': ticket,
-    }
-    return render(request, 'blog/review_delete.html', context=context)
+    if request.user == review.user:
+        context = {
+            'review': review,
+            'delete_form': delete_form,
+            'ticket': ticket,
+        }
+        return render(request, 'blog/review_delete.html', context=context)
+    else:
+        raise PermissionDenied
