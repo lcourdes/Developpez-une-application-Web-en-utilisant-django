@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Vous êtes en train de poster une réponse à </h2>
+    <div class="ticket">
+        {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
+    </div>
+    
+    <h2>Critique</h2>
+    <form method="post" enctype="multipart/form-data">
+        {{ review_form.as_div }}
+        {% csrf_token %}
+        <button type="submit" class="button-type">Envoyer</button>
+    </form>
+{% endblock content %}

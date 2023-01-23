@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
+{% load blog_extras %}
 {% block content %}
-    {% for ticket in tickets %}
-        <div class="ticket">
-            {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
-            <div class="double-button">
-                <a href="{% url 'ticket_edit' ticket.id %}" class="button-type">Modifier</a>
-                <a href="{% url 'ticket_delete' ticket.id %}" class="button-type">Supprimer</a>
+    {% for instance in tickets_and_reviews %}
+        {% if instance|model_type == 'Ticket' %}
+            <div class="ticket">
+                {% include "blog/partials/ticket_snippet.html" with ticket=instance %}
+                <div class="double-button">
+                    <a href="{% url 'ticket_edit' instance.id %}" class="button-type">Modifier</a>
+                    <a href="{% url 'ticket_delete' instance.id %}" class="button-type">Supprimer</a>
+                </div>
             </div>
-        </div>
+        {% elif instance|model_type == 'Review' %}
+            <div class="review">
+                {% include "blog/partials/review_snippet.html" with review=instance ticket=instance.ticket %}
+                <div class="double-button">
+                    <a href="{% url 'review_edit' instance.id %}" class="button-type">Modifier</a>
+                    <a href="{% url 'review_delete' instance.id %}" class="button-type">Supprimer</a>
+                </div>
+            </div>
+        {% endif %}
     {% endfor %}
 {% endblock content %}

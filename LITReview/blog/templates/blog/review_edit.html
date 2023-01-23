@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Modifier une critique</h2>
+    <div class="ticket">
+        {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
+    </div>
+    <form method="post">
+        {{ edit_form.as_div }}
+        {% csrf_token %}
+        <button type="submit" class="button-type">Envoyer</button>
+    </form>
+{% endblock content %}
