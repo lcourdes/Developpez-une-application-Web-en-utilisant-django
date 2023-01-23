@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <p>Vous êtes connecté !</p>
+    <div class="double-button">
+        <a href="{% url 'ticket_create' %}" class="button-type">Demander une critique</a>
+        <a href="" class="button-type">Créer une critique</a>
+    </div>
+    {% for ticket in tickets %}
+        <div class="ticket">
+            {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
+        </div>
+    {% endfor %}
 {% endblock content %}

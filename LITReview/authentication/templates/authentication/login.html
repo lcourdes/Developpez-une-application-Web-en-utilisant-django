@@ -3,14 +3,14 @@
     <div id="login">
         <div>
             <h2>Inscrivez-vous maintenant</h2>
-            <button><a href="{% url 'signup' %}">S'inscrire</a></button>
+            <a href="{% url 'signup' %}" class="button-type">S'inscrire</a>
         </div>
         <div>
             <h2>Connectez-vous</h2>
             <form method="post">
                 {{ form.as_p }}
                 {% csrf_token %}
-                <button type="submit" >Se connecter</button>
+                <button type="submit" class="button-type">Se connecter</button>
             </form>
         </div>
     </div>

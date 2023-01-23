@@ -1,0 +1,15 @@
+
+    <div class="ticket-information">
+        {% if request.user == ticket.user %}
+            <p>Ticket - Vous</p>
+        {% else %}
+            <p>Ticket - {{ ticket.user }}</p>
+        {% endif %}
+        <p>{{ ticket.time_created }}</p>
+    </div>
+    
+    <h3>{{ ticket.title }}</h3>
+    <p>{{ ticket.description }}</p>
+    {% if ticket.image.url is not None %}
+        <img src="{{ ticket.image.url }}">
+    {% endif %}

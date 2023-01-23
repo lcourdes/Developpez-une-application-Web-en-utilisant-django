@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Êtes-vous sûr de vouloir supprimer le ticket ?</h2>
+    <form method="post">
+        {{ delete_form }}
+        {% csrf_token %}
+        <div class="double-button">
+            <a href="{% url 'posts' %}" class="button-type">Annuler</a>
+            <button type="submit" class="button-type">Supprimer</button>
+        </div>
+    </form>
+    <div class="ticket">
+        {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
+    </div>
+{% endblock content %}

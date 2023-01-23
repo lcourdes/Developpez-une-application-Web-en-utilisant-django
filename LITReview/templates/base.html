@@ -9,17 +9,16 @@
         <h1>LITReview</h1>
         {% if user.is_authenticated %}
         <nav>
-            <a href="">Flux</a>
-            <a href="">Posts</a>
+            <a href="{% url 'home' %}">Flux</a>
+            <a href="{% url 'posts' %}">Posts</a>
             <a href="">Abonnements</a>
             <a href="{% url 'logout' %}">Se déconnecter</a>
         </nav>
         {% endif %}   
     </header>
     <body>
-        {% block content %}{% endblock content %}
-        {% if user.is_authenticated %}
-            <p>Vous êtes {{ request.user }}.</p>
-        {% endif %}
+        <article>
+            {% block content %}{% endblock content %}
+        </article>
     </body>
 </html>

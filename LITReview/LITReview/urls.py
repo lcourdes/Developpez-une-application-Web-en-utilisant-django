@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 import authentication.views
 import blog.views
 
@@ -25,4 +27,14 @@ urlpatterns = [
     path('signup/', authentication.views.signup_page, name='signup'),
 
     path('home/', blog.views.home, name='home'),
+    path('ticket/create/', blog.views.ticket_create, name='ticket_create'),
+    path('posts/', blog.views.posts, name="posts"),
+    path('posts/<int:ticket_id>/edit/', blog.views.ticket_edit, name='ticket_edit'),
+    path('posts/<int:ticket_id>/delete/', blog.views.ticket_delete, name='ticket_delete'),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )

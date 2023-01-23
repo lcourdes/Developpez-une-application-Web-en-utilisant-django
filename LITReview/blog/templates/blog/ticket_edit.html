@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Modifier un ticket</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% for field in edit_form %}
+            {% if field.name == 'image' %}
+                <div>
+                    <p>{{ field.label }} :</p>
+                    <label for="id_image" class="button-type">Télécharger fichier</label>
+                    <input type="file" name="image" accept="image/*" id="id_image" style="display:block;">
+                    {% if field.widget_type == 'clearablefile' %}
+                        {% if ticket.image.url is not None %}
+                            <p>Actuellement : </p>
+                            <img src="{{ ticket.image.url }}">
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% else %}
+                <div>
+                    <p>{{ field.label }} :</p>
+                    {{ field}}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% csrf_token %}
+        <button type="submit" class="button-type">Envoyer</button>
+    </form>
+{% endblock content %}

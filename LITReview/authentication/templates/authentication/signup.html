@@ -2,12 +2,12 @@
 {% block content %}
     <div id="signup">
         <h2>Inscrivez-vous</h2>
-        <form method="post">
+        <form method="post" id="form-sign-up">
             {{ form.as_p }}
             {% csrf_token %}
             <div>
-                <button><a href="{% url 'login' %}">Retourner</a></button>
-                <button type="submit" >S’inscrire</button>
+                <a href="{% url 'login' %}" class="button-type">Retourner</a>
+                <button type="submit" class="button-type">S’inscrire</button>
             </div>
         </form>
     </div>
