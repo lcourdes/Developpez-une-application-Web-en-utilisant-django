@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from . import forms, models
 from itertools import chain
 
@@ -48,41 +48,44 @@ def ticket_create(request):
             return redirect('home')
     return render (request, 'blog/ticket_create.html', context={'form':form})
 
+def get_instance(request, model, id):
+    try: 
+        instance = model.objects.get(id=id)
+    except ObjectDoesNotExist:
+        raise PermissionDenied
+    if request.user != instance.user:
+        raise PermissionDenied
+    return instance
+
 @login_required
 def ticket_edit(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    ticket = get_instance(request, models.Ticket, ticket_id)
     edit_form = forms.TicketForm(instance=ticket)
     if request.method == 'POST':
         edit_form = forms.TicketForm(request.POST, request.FILES, instance=ticket)
         if edit_form.is_valid():
             edit_form.save()
             return redirect('posts')
-    if request.user == ticket.user:
-        context = {
-            'edit_form': edit_form,
-            'ticket': ticket,
-        }
-        return render(request, 'blog/ticket_edit.html', context=context)
-    else:
-        raise PermissionDenied
+    context = {
+        'edit_form': edit_form,
+        'ticket': ticket,
+    }
+    return render(request, 'blog/ticket_edit.html', context=context)
 
 @login_required
 def ticket_delete(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    ticket = get_instance(request, models.Ticket, ticket_id)
     delete_form = forms.DeleteTicketForm()
     if request.method == 'POST':
         delete_form = forms.DeleteTicketForm(request.POST)
         if delete_form.is_valid():
             ticket.delete()
             return redirect('posts')
-    if request.user == ticket.user:
-        context = {
-            'ticket': ticket,
-            'delete_form': delete_form,
-        }
-        return render(request, 'blog/ticket_delete.html', context=context)
-    else:
-        raise PermissionDenied
+    context = {
+        'ticket': ticket,
+        'delete_form': delete_form,
+    }
+    return render(request, 'blog/ticket_delete.html', context=context)
 
 @login_required
 def review_and_ticket_create(request):
@@ -109,7 +112,7 @@ def review_and_ticket_create(request):
 
 @login_required
 def review_specific_ticket_create(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    ticket = get_instance(request, models.Ticket, ticket_id)
     review_form = forms.ReviewForm()
     if request.method =='POST':
         review_form = forms.ReviewForm(request.POST)
@@ -130,26 +133,23 @@ def review_specific_ticket_create(request, ticket_id):
 
 @login_required
 def review_edit(request, review_id):
-    review = get_object_or_404(models.Review, id=review_id)
+    review = get_instance(request, models.Review, review_id)
     edit_form = forms.ReviewForm(instance=review)
     if request.method == 'POST':
         edit_form = forms.ReviewForm(request.POST, instance=review)
         if edit_form.is_valid():
             edit_form.save()
             return redirect('posts')
-    if request.user == review.user:
-        context = {
-            'edit_form': edit_form,
-            'review': review,
-            'ticket': review.ticket,
-        }
-        return render(request, 'blog/review_edit.html', context=context)
-    else:
-        raise PermissionDenied
+    context = {
+        'edit_form': edit_form,
+        'review': review,
+        'ticket': review.ticket,
+    }
+    return render(request, 'blog/review_edit.html', context=context)
 
 @login_required
 def review_delete(request, review_id):
-    review = get_object_or_404(models.Review, id=review_id)
+    review = get_instance(request, models.Review, review_id)
     ticket = review.ticket
     delete_form = forms.DeleteReviewForm()
     if request.method == 'POST':
@@ -159,15 +159,12 @@ def review_delete(request, review_id):
             ticket.is_reviewed = False
             ticket.save()
             return redirect('posts')
-    if request.user == review.user:
-        context = {
-            'review': review,
-            'delete_form': delete_form,
-            'ticket': ticket,
-        }
-        return render(request, 'blog/review_delete.html', context=context)
-    else:
-        raise PermissionDenied
+    context = {
+        'review': review,
+        'delete_form': delete_form,
+        'ticket': ticket,
+    }
+    return render(request, 'blog/review_delete.html', context=context)
 
 @login_required
 def follow_users(request):
