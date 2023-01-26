@@ -204,8 +204,25 @@ article img{
     margin-right: 10%;
 }
 
-.follow{
+#choose-user-to-follow{
     display: flex;
     flex-direction: row;
+}
 
+#choose-user-to-follow .button-type{
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+#choose-user-to-follow select, #follow-template ul{
+    max-width: 50%;
+    margin-left: 10%;
+    text-align: center;
+}
+
+.button-unfollow{
+    margin-left: 10%;
+    border-style: none;
+    background-color: white;
+    color: gray;
 }

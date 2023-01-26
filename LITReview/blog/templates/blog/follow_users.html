@@ -4,7 +4,7 @@
     <form method="post">
         <div class="mb-4">
             <h3>Suivre d'autres utilisateurs</h3>
-            <div class="follow">
+            <div id="choose-user-to-follow">
                 <select class="form-select" name="followed_user" required id="id_followed_user">
                     <option value selected>Nom d'utilisateur</option>
                     {% for user in users %}
@@ -20,25 +20,24 @@
 
     <form method="post">
         <div class="mb-4">
-            <h3>Abbonnements</h3>
-            <div>
+            <h3>Abonnements</h3>
+            <ul class="list-group list-group-flush ">
                 {% for user in request.user.following.all %}
-                    <div class="follow">
-                        <p>{{ user.followed_user }}</p>
-                        <button class="button-type" name="delete-user-follow-button" value="{{ user.followed_user.id }}">Désabonner</button>
-                    </div>
+                    <li class="list-group-item">{{ user.followed_user }}<button class="button-unfollow" name="delete-user-follow-button" value="{{ user.followed_user.id }}">Se désabonner</button></li>
                 {% endfor %}
                 {% csrf_token %}
-            </div>
+            </ul>
         </div>
     </form>
 
     <div class="mb-4">
         <h3>Abonnés</h3>
-        <div>
+        <div class="follow-list">
+        <ul class="list-group list-group-flush">
             {% for user in request.user.followed_by.all %}
-                <p>{{ user.user }}</p>
+                <li class="list-group-item">{{ user.user }}</li>
             {% endfor %}
+        </ul>
         </div>
     </div>
 </div>

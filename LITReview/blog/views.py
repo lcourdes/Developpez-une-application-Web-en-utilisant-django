@@ -169,7 +169,7 @@ def review_delete(request, review_id):
 @login_required
 def follow_users(request):
     follow_form = forms.UsersFollowForm()
-    users = User.objects.all().exclude(id=request.user.id)
+    users = User.objects.filter(~Q(followed_by__in=request.user.following.all())).exclude(id=request.user.id)
     context = {'users': users,}
     if request.method == 'POST' and "new-user-follow-button" in request.POST:
         follow_form = forms.UsersFollowForm(request.POST)
