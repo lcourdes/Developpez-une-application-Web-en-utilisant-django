@@ -5,6 +5,8 @@ from . import forms
 
 
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     form = forms.LoginForm()
     message = ''
     if request.method == 'POST':
@@ -28,6 +30,8 @@ def logout_user(request):
 
 
 def signup_page(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     form = forms.SignupForm()
     if request.method == 'POST':
         form = forms.SignupForm(request.POST)
