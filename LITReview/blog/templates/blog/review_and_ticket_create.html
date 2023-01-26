@@ -2,11 +2,15 @@
 {% block content %}
     <h2>Créer une critique</h2>
     <form method="post" enctype="multipart/form-data">
-        <h3>Livre/Article</h3>
-        {{ ticket_form.as_div }}
-        <h3>Critique</h3>
-        {{ review_form.as_div }}
-        {% csrf_token %}
-        <button type="submit" class="button-type">Envoyer</button>
+        <div class="review">
+            <div class="pb-3 ticket">
+                <h3>Livre/Article</h3>
+                {% include "blog/partials/ticket_form_snippet.html" %}
+            </div>
+            
+            <h3>Critique</h3>
+            {% include "blog/partials/review_form_snippet.html" %}
+            <button type="submit" class="button-type">Envoyer</button>
+        </div>
     </form>
 {% endblock content %}

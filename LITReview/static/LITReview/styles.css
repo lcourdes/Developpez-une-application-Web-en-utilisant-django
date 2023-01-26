@@ -1,23 +1,65 @@
+@font-face {
+    font-family: 'journalregular';
+    src: url('fonts/journal-font-regular/journal-webfontjournal.eot');
+    src: url('fonts/journal-font-regular/journal-webfontjournal.eot?#iefix') format('embedded-opentype'),
+         url('fonts/journal-font-regular/journal-webfontjournal.woff2') format('woff2'),
+         url('fonts/journal-font-regular/journal-webfontjournal.woff') format('woff'),
+         url('fonts/journal-font-regular/journal-webfontjournal.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    font-family:'Times New Roman', Times, serif;
+}
+
 header{
-    padding-top: 20px;
-    padding-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+header #title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 header h1{
     text-align: center;
+    font-family: journalregular;
+    font-size: 85px;
+    font-weight: lighter;
+    position: relative;
+    top: 180px;
+    left: 45px;
+}
+
+header #pen-image{
+    height: auto;
+    width: 19em;
 }
 
 header nav{
-    text-align: end;   
+    margin-top: 70px;
+    text-align: end;
 }
 
-article{
-    font-family: Georgia, 'Times New Roman', Times, serif;
+header nav a{
+    padding-right: 2em;
+    text-decoration: none;
+    color: black;
+}
+
+header nav a:hover{
+    color: black;
+    text-decoration: underline;
 }
 
 .ticket, .review{
-    margin: 5% 10%;
-    padding: 0% 5% 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 30px;
+    padding: 0% 5%;
     border: solid;
     border-color: gray;
     border-radius: 15px;
@@ -34,18 +76,21 @@ article{
     border-width: 1px;
 }
 
+.review > .ticket{
+    margin-top: 15px;
+}
+
 .ticket h3, .review h3{
     text-align: center;
+}
+
+.star{
+    color: rgba(90,58,61,255);
 }
 
 .double-button{
     display: flex;
     justify-content: space-around;
-    margin-top: 10px;
-}
-
-.ticket > .double-button, .ticket > .button-type{
-    margin-top: 5%;
 }
 
 .ticket-information, .review-information{
@@ -53,13 +98,21 @@ article{
     font-size: small;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    
+    justify-content: space-between;  
 }
 
 h2{
-    font-size: 18px;
     font-weight: normal;
+    margin-left: 10%;
+}
+
+#login h2, #signup h2{
+    margin-left: 0%;
+}
+
+h3{
+    margin-top: 15px;
+    margin-bottom: 25px;
 }
 
 form{
@@ -69,6 +122,11 @@ form{
 
 form input{
     padding: 15px;
+}
+
+.form-check-label{
+    padding-top: 7px;
+    padding-left: 7px;
 }
 
 .errorlist li{
@@ -87,6 +145,7 @@ form input{
     padding-bottom: 8px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 15px;
     background-color: rgb(212, 212, 212);
     text-align: center;
     cursor: pointer;
@@ -133,8 +192,20 @@ form input{
     margin-right: 10px;
 }
 
-img{
-    max-width: 150px;
+article img{
+    max-width: 200px;
     height: auto;
     margin: auto;
+    margin-bottom: 15px;
+}
+
+#follow-template{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.follow{
+    display: flex;
+    flex-direction: row;
+
 }

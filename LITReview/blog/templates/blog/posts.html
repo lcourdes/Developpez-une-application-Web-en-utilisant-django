@@ -4,7 +4,7 @@
     {% for instance in tickets_and_reviews %}
         {% if instance|model_type == 'Ticket' %}
             <div class="ticket">
-                {% include "blog/partials/ticket_snippet.html" with ticket=instance %}
+                {% include "blog/partials/ticket_view_snippet.html" with ticket=instance %}
                 <div class="double-button">
                     <a href="{% url 'ticket_edit' instance.id %}" class="button-type">Modifier</a>
                     <a href="{% url 'ticket_delete' instance.id %}" class="button-type">Supprimer</a>
@@ -12,7 +12,7 @@
             </div>
         {% elif instance|model_type == 'Review' %}
             <div class="review">
-                {% include "blog/partials/review_snippet.html" with review=instance ticket=instance.ticket %}
+                {% include "blog/partials/review_view_snippet.html" with review=instance ticket=instance.ticket %}
                 <div class="double-button">
                     <a href="{% url 'review_edit' instance.id %}" class="button-type">Modifier</a>
                     <a href="{% url 'review_delete' instance.id %}" class="button-type">Supprimer</a>

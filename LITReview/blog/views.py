@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from . import forms, models
 from itertools import chain
@@ -7,10 +9,13 @@ from itertools import chain
 
 @login_required
 def home(request):
-    reviews = models.Review.objects.all()
-    tickets = models.Ticket.objects.all()
+    followed_users = User.objects.filter(followed_by__in=request.user.following.all())
+    reviews = models.Review.objects.filter(Q(user__in=followed_users)|Q(user=request.user))
+    tickets = models.Ticket.objects.filter(user__in=followed_users)
+    my_tickets=models.Ticket.objects.filter(user=request.user)
+    reviews_of_my_tickets= models.Review.objects.filter(ticket__in=my_tickets).exclude(user=request.user)
     tickets_and_reviews = sorted(
-        chain(tickets, reviews), 
+        chain(reviews, tickets, my_tickets, reviews_of_my_tickets), 
         key=lambda instance: instance.time_created, 
         reverse=True)
     context = {
@@ -163,3 +168,20 @@ def review_delete(request, review_id):
         return render(request, 'blog/review_delete.html', context=context)
     else:
         raise PermissionDenied
+
+@login_required
+def follow_users(request):
+    follow_form = forms.UsersFollowForm()
+    users = User.objects.all().exclude(id=request.user.id)
+    context = {'users': users,}
+    if request.method == 'POST' and "new-user-follow-button" in request.POST:
+        follow_form = forms.UsersFollowForm(request.POST)
+        if follow_form.is_valid():
+            usersFollow = follow_form.save()
+            usersFollow.save()
+            return render(request, 'blog/follow_users.html', context=context)
+    if request.method == 'POST' and "delete-user-follow-button" in request.POST:
+        instance = models.UserFollows.objects.get(user=request.user, followed_user=request.POST['delete-user-follow-button'])
+        instance.delete()
+        return render(request, 'blog/follow_users.html', context=context)
+    return render(request, 'blog/follow_users.html', context=context)

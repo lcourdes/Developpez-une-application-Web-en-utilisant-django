@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Vous êtes en train de poster une réponse à </h2>
-    <div class="ticket">
-        {% include "blog/partials/ticket_snippet.html" with ticket=ticket%}
+    <div class="review">
+        <div class="ticket">
+            {% include "blog/partials/ticket_view_snippet.html" with ticket=ticket%}
+        </div>
+
+        <h3>Critique</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% include "blog/partials/review_form_snippet.html" %}
+            <button type="submit" class="button-type">Envoyer</button>
+        </form>
     </div>
-    
-    <h2>Critique</h2>
-    <form method="post" enctype="multipart/form-data">
-        {{ review_form.as_div }}
-        {% csrf_token %}
-        <button type="submit" class="button-type">Envoyer</button>
-    </form>
 {% endblock content %}

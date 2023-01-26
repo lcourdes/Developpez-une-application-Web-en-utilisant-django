@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="follow-template">
+    <form method="post">
+        <div class="mb-4">
+            <h3>Suivre d'autres utilisateurs</h3>
+            <div class="follow">
+                <select class="form-select" name="followed_user" required id="id_followed_user">
+                    <option value selected>Nom d'utilisateur</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+                <input name="user" type="hidden" required id="id_user" class="form-control" value="{{ user.id }}">
+                <button type="submit" class="button-type" name="new-user-follow-button">Envoyer</button>
+            </div>
+        </div>
+        {% csrf_token %}
+    </form>
+
+    <form method="post">
+        <div class="mb-4">
+            <h3>Abbonnements</h3>
+            <div>
+                {% for user in request.user.following.all %}
+                    <div class="follow">
+                        <p>{{ user.followed_user }}</p>
+                        <button class="button-type" name="delete-user-follow-button" value="{{ user.followed_user.id }}">Désabonner</button>
+                    </div>
+                {% endfor %}
+                {% csrf_token %}
+            </div>
+        </div>
+    </form>
+
+    <div class="mb-4">
+        <h3>Abonnés</h3>
+        <div>
+            {% for user in request.user.followed_by.all %}
+                <p>{{ user.user }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

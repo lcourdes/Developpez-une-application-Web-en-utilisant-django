@@ -8,14 +8,14 @@
     {% for instance in tickets_and_reviews %}
         {% if instance|model_type == 'Ticket' %}
             <div class="ticket">
-                {% include "blog/partials/ticket_snippet.html" with ticket=instance %}
+                {% include "blog/partials/ticket_view_snippet.html" with ticket=instance %}
                 {% if not instance.is_reviewed %}
                     <a href="{% url 'review_specific_ticket_create' instance.id %}" class="button-type">Créer une critique</a>
                 {% endif %}
             </div>
         {% elif instance|model_type == 'Review' %}
             <div class="review">
-                {% include "blog/partials/review_snippet.html" with review=instance ticket=instance.ticket %}
+                {% include "blog/partials/review_view_snippet.html" with review=instance ticket=instance.ticket %}
             </div>
         {% endif %}
     {% endfor %}

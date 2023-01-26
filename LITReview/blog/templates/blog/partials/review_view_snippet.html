@@ -1,0 +1,16 @@
+
+    <div class="review-information">
+        {% if request.user == review.user %}
+            <p>Vous avez publié une critique</p>
+        {% else %}
+            <p>{{ review.user }} a posté une critique</p>
+        {% endif %}
+        <p>{{ review.time_created }}</p>
+    </div>
+    
+    <h3>{{ review.headline }} - {% include "blog/partials/stars_snippet.html" with rating=review.rating %}</h3>
+    
+    <p>{{ review.body }}</p>
+    <div class="ticket">
+        {% include "blog/partials/ticket_view_snippet.html" with ticket=ticket %}
+    </div>
