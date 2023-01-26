@@ -8,8 +8,10 @@
     <textarea name="description" id="id_description" class="form-control" style="height:200px;">{{ ticket.description }}</textarea>
 </div>
 
-<div class="mt-3 mb-4">
-    <label for="id_image" class="form-label">Image :</label>
-    <input class="form-control" type="file" id="id_image" name="image" accept="image/*">
+<div class="mt-3 mb-4 image-form">
+    <label class="form-label">Image</label>
+    <input class="form-control" type="file" id="id_image" name="image" accept="image/*" onchange="loadFile(event)" style="display: none;">
+    <img id="preview-img"/>
+    <label for="id_image" class="button-type">Télécharger fichier</label>
 </div>
 {% csrf_token %}

@@ -193,10 +193,18 @@ form input{
 }
 
 article img{
-    max-width: 200px;
-    height: auto;
     margin: auto;
     margin-bottom: 15px;
+}
+
+#preview-img {
+    max-width: 200px;
+    margin-top: 20px;
+}
+
+.image-form{
+    display: flex;
+    flex-direction: column;
 }
 
 #follow-template{
