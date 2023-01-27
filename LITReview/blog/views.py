@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.db import transaction
 from . import forms, models
 from itertools import chain
 
@@ -13,7 +14,7 @@ def home(request):
     reviews = models.Review.objects.filter(Q(user__in=followed_users)|Q(user=request.user))
     tickets = models.Ticket.objects.filter(user__in=followed_users)
     my_tickets=models.Ticket.objects.filter(user=request.user)
-    reviews_of_my_tickets= models.Review.objects.filter(ticket__in=my_tickets).exclude(user=request.user)
+    reviews_of_my_tickets= models.Review.objects.filter(ticket__in=my_tickets).exclude(id__in=reviews.all())
     tickets_and_reviews = sorted(
         chain(reviews, tickets, my_tickets, reviews_of_my_tickets), 
         key=lambda instance: instance.time_created, 
@@ -95,15 +96,16 @@ def review_and_ticket_create(request):
         review_form = forms.ReviewForm(request.POST)
         ticket_form = forms.TicketForm(request.POST, request.FILES)
         if all([review_form.is_valid(), ticket_form.is_valid()]):
-            ticket = ticket_form.save(commit=False)
-            ticket.is_reviewed = True
-            ticket.user = request.user
-            ticket.save()
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket
-            review.save()
-            return redirect('home')
+            with transaction.atomic():
+                ticket = ticket_form.save(commit=False)
+                ticket.is_reviewed = True
+                ticket.user = request.user
+                ticket.save()
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.ticket = ticket
+                review.save()
+                return redirect('home')
     context = {
         'review_form': review_form,
         'ticket_form': ticket_form,
@@ -112,18 +114,19 @@ def review_and_ticket_create(request):
 
 @login_required
 def review_specific_ticket_create(request, ticket_id):
-    ticket = get_instance(request, models.Ticket, ticket_id)
+    ticket = models.Ticket.objects.get(id=ticket_id)
     review_form = forms.ReviewForm()
     if request.method =='POST':
         review_form = forms.ReviewForm(request.POST)
         if review_form.is_valid:
-            ticket.is_reviewed = True
-            ticket.save()
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket
-            review.save()
-            return redirect('home')
+            with transaction.atomic():
+                ticket.is_reviewed = True
+                ticket.save()
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.ticket = ticket
+                review.save()
+                return redirect('home')
     context = {
         'review_form': review_form,
         'ticket': ticket,
@@ -155,10 +158,11 @@ def review_delete(request, review_id):
     if request.method == 'POST':
         delete_form = forms.DeleteReviewForm(request.POST)
         if delete_form.is_valid():
-            review.delete()
-            ticket.is_reviewed = False
-            ticket.save()
-            return redirect('posts')
+            with transaction.atomic():
+                review.delete()
+                ticket.is_reviewed = False
+                ticket.save()
+                return redirect('posts')
     context = {
         'review': review,
         'delete_form': delete_form,
